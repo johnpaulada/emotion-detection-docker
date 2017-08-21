@@ -54,7 +54,6 @@ def process_photo(image_path):
         processed_image = preprocess(image, shape)
         processed_face_rects = get_face_rects(processed_image)
         for processed_face_rect in processed_face_rects:
-            print('working image')
             print('==========')
             processed_shape = get_face_shape(processed_image, processed_face_rect)
             features = get_features(processed_shape)
@@ -220,12 +219,12 @@ def get_overlapping_pairs(start, end):
     return pairs
 
 # features = process_photo('./images/sad/tammo_straight_sad_open.jpg')
-x, y = process_photos('./images')
+# x, y = process_photos('./images')
 
-model = train(x, y)
-joblib.dump(model, 'emotion_detector.pkl')
-# model = joblib.load('emotion_detector.pkl')
-test_features = process_photo('./angry-sample.jpg')
+# model = train(x, y)
+# joblib.dump(model, 'emotion_detector.pkl')
+model = joblib.load('emotion_detector.pkl')
+test_features = process_photo('./images/sad/sad_2.jpg')
 print(model.predict([test_features]))
 
 # Draw rect on face
