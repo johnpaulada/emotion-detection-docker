@@ -1,5 +1,4 @@
 import numpy as np
-import argparse
 import imutils
 import dlib
 import cv2
@@ -218,14 +217,12 @@ def get_overlapping_pairs(start, end):
 
     return pairs
 
-# features = process_photo('./images/sad/tammo_straight_sad_open.jpg')
-# x, y = process_photos('./images')
-
-# model = train(x, y)
-# joblib.dump(model, 'emotion_detector.pkl')
-model = joblib.load('emotion_detector.pkl')
-test_features = process_photo('./images/sad/sad_2.jpg')
-print(model.predict([test_features]))
+x, y = process_photos('./images')
+model = train(x, y)
+joblib.dump(model, 'emotion_detector.pkl')
+# model = joblib.load('emotion_detector.pkl')
+# test_features = process_photo('./images/sad/sad_2.jpg')
+# print(model.predict([test_features]))
 
 # Draw rect on face
 # x, y, w, h = face_utils.rect_to_bb(rect)
