@@ -217,12 +217,15 @@ def get_overlapping_pairs(start, end):
 
     return pairs
 
-x, y = process_photos('./images')
-model = train(x, y)
-joblib.dump(model, 'emotion_detector.pkl')
-# model = joblib.load('emotion_detector.pkl')
-# test_features = process_photo('./images/sad/sad_2.jpg')
-# print(model.predict([test_features]))
+# x, y = process_photos('./images')
+# model = train(x, y)
+# joblib.dump(model, 'emotion_detector.pkl')
+emotions = ['angry', 'happy', 'neutral', 'sad']
+model = joblib.load('emotion_detector.pkl')
+test_features = process_photo('./aa.jpg')
+raw_results = model.predict([test_features])
+results = [emotions[x] for x in raw_results]
+print(results)
 
 # Draw rect on face
 # x, y, w, h = face_utils.rect_to_bb(rect)
