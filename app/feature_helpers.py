@@ -9,7 +9,7 @@ def extract_image_features(image_rep, i=0):
     print("Extracting features from image #{i}...".format(i=i+1))
     return (process_image(image_path), index)
 
-def process_image(image_path):
+def process_image(image_path, i=0):
     return Maybe.of(cv2.imread(image_path)) \
                 .map(resize_to(500)) \
                 .map(get_face_rects) \

@@ -1,11 +1,10 @@
-from FP import List
+from FP import Maybe, List
 from os_helpers import get_directories, get_files_from_root
 from feature_helpers import extract_image_features, process_image, split_data
-from ml_helpers import experiment, train_model, save_model, load_model
+from ml_helpers import experiment, train_model, save_model, load_model, predict_with_model
 import numpy as np
 
 # OPTIMIZATIONS TO BE DONE (hopefully)
-# - PCA
 # - List comprehensions
 # - Iteration to recursion
 # - Memoize or lru_cache
@@ -15,42 +14,35 @@ import numpy as np
 IMAGE_DIR = './images'
 EMOTIONS = ['angry', 'happy', 'neutral', 'sad']
 
-# TODO: Make FP friendly
 def train(image_dir):
-    print("Getting data...")
-    data = List(get_directories(image_dir)) \
-            .chain(get_files_from_root(image_dir)) \
-            .reduce(lambda v, acc: acc + v) \
-            .map(extract_image_features) \
-            .reduce(split_data, ([], [])) \
-            .value
+    print("Training start...")
     
-    x = np.array(data[0])
-    y = np.array(data[1])
-
-    print("Experimenting...")
-    experiment(x, y)
-
-    print("Training...")
-    model = train_model(x, y)
-
-    print("Saving model...")
-    save_model(model)
+    List(get_directories(image_dir)) \
+        .chain(get_files_from_root(image_dir)) \
+        .reduce(lambda v, acc: acc + v) \
+        .map(extract_image_features) \
+        .reduce(split_data, ([], [])) \
+        .map(lambda v: (np.array(v[0]), np.array(v[1]))) \
+        .map(experiment) \
+        .map(train_model) \
+        .map(save_model)
 
     print("Training complete.")
 
-# TODO: Make FP friendly
-def predict(image_path):
-    model = load_model()
-    data = process_image(image_path)
-    raw_results = model.predict([data])
-    results = [EMOTIONS[x] for x in raw_results]
+def predict(image_paths):
+    print("Predicting...")
 
-    return results
+    return List(image_paths) \
+        .map(process_image) \
+        .reduce(lambda v, acc: acc + (v,), ()) \
+        .map(predict_with_model(load_model())) \
+        .map(lambda v: [EMOTIONS[x] for x in v]) \
+        .value
 
-# Remove DS Store from images: rm ./app/images/*/.DS_Store
-
-# train(IMAGE_DIR)
+# Train and save the model
+train(IMAGE_DIR)
 
 # Predict emotion of image
-# print(predict('./happy-person.jpg'))
+# print(predict(['./happy-person.jpg', './happy-person.jpg']))
+
+# Remove DS Store from images: rm ./app/images/*/.DS_Store
