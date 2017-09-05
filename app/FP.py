@@ -83,10 +83,7 @@ def create_list_applyer(self, f, function_applyer):
 
 def create_list_function_applyer(evaluator):
     def list_applyer(f, l):
-        new_list = []
-        for index, value in enumerate(l):
-            new_list.append(evaluator(f, value, index))
-        return new_list
+        return [evaluator(f, value, index) for index, value in enumerate(l)]
 
     return list_applyer
 

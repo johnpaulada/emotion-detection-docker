@@ -9,6 +9,7 @@ import argparse
 # - Use splat
 # - Fix constants
 # - Iteration to recursion
+# - Error trapping when invalid image
 
 IMAGE_DIR = './images'
 EMOTIONS = ['angry', 'happy', 'neutral', 'sad']
