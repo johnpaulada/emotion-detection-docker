@@ -2,6 +2,8 @@ import imutils
 import dlib
 from imutils import face_utils
 
+SHAPE_PREDICTOR_LOCATION = './shape_predictor.dat'
+
 def resize_to(x=500):
     def resize(image):
         return imutils.resize(image, width=x)
@@ -14,7 +16,7 @@ def get_face_rects(image):
     return (image, list(rects))
 
 def get_face_shape(image, rect):
-    predictor = dlib.shape_predictor('./shape_predictor.dat')
+    predictor = dlib.shape_predictor(SHAPE_PREDICTOR_LOCATION)
     shape = predictor(image, rect)
     shape = face_utils.shape_to_np(shape)
 
