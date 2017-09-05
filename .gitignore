@@ -1,0 +1,4 @@
+app/old_app.py
+app/__pycache__
+emotion-detection.tar
+app/*.jpg

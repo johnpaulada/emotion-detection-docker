@@ -21,6 +21,16 @@ def process_image(image_path):
                 .map(get_features) \
                 .value
 
+def split_data(value, acc):
+    x = value[0]
+    y = value[1]
+    x_acc = acc[0]
+    y_acc = acc[1]
+    x_acc.append(x)
+    y_acc.append(y)
+
+    return (x_acc, y_acc)
+
 def noisy_identity(some_text):
     def identity(value):
         print(some_text)
