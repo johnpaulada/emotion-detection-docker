@@ -12,7 +12,8 @@
 3. Run `cd emotion-detection-docker` in your console
 4. Run `docker pull johnpaulada/emotion-detection` or `docker load -i emotion-detection.tar` in your console
 5. Run `docker run -v 'pwd'/app:/home/app -it johnpaulada/emotion-detection` in your console
-6. You're all set!
+6. Run `cd app`
+7. You're all set!
 
 ## Usage
 For help, you can run `python3 app.py -h`.
@@ -41,6 +42,7 @@ python3 app.py --predict path-to-input-image1 path-to-input-image2
 4. dlib
 5. imutils
 6. Scikit-Learn
+7. Docker
 
 ## License
 MIT

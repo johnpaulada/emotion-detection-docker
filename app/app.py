@@ -7,6 +7,7 @@ import argparse
 
 # OPTIMIZATIONS TO BE DONE (hopefully)
 # - Parallelize
+# - Use splat
 # - Memoize or lru_cache
 # - Fix constants
 # - Iteration to recursion
