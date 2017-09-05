@@ -4,7 +4,7 @@ from feature_helpers import extract_image_features, process_image, split_data
 from ml_helpers import experiment, train_model, save_model, load_model
 import numpy as np
 
-# OPTIMIZATIONS
+# OPTIMIZATIONS TO BE DONE (hopefully)
 # - PCA
 # - List comprehensions
 # - Iteration to recursion
@@ -12,7 +12,6 @@ import numpy as np
 # - Try numpy on everything
 # - Fix constants
 
-# SAMPLE_IMAGE = './images/3. sad/vh6to.jpg'
 IMAGE_DIR = './images'
 EMOTIONS = ['angry', 'happy', 'neutral', 'sad']
 
@@ -29,7 +28,7 @@ def train(image_dir):
     x = np.array(data[0])
     y = np.array(data[1])
 
-    print("Training...")
+    print("Experimenting...")
     experiment(x, y)
 
     print("Training...")
@@ -49,6 +48,9 @@ def predict(image_path):
 
     return results
 
-# rm ./app/images/*/.DS_Store
+# Remove DS Store from images: rm ./app/images/*/.DS_Store
+
 # train(IMAGE_DIR)
+
+# Predict emotion of image
 # print(predict('./happy-person.jpg'))
