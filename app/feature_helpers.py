@@ -49,9 +49,7 @@ def get_features(face_shape):
     return features
 
 def get_coordinates_from_shape(shape):
-    coordinates = []
-    for x, y in shape:
-        coordinates.append((x, y))
+    coordinates = [(x, y) for x, y in shape]
 
     return coordinates
 
@@ -77,26 +75,10 @@ def get_relevant_face_lines(coordinates):
     return face_lines
 
 def get_face_line_lengths(face_lines):
-    line_lengths = []
-
-    for face_line in face_lines:
-        point1 = face_line[0]
-        point2 = face_line[1]
-        line_length = get_line_length(point1, point2)
-        line_lengths.append(line_length)
-
-    return line_lengths
+    return [get_line_length(face_line[0], face_line[1]) for face_line in face_lines]
 
 def get_face_line_angles(face_lines):
-    line_angles = []
-
-    for face_line in face_lines:
-        point1 = face_line[0]
-        point2 = face_line[1]
-        line_angle = get_line_angle(point1, point2)
-        line_angles.append(line_angle)
-
-    return line_angles
+    return [get_line_angle(face_line[0], face_line[1]) for face_line in face_lines]
 
 def pairs_from_ranges(ranges):
     pairs = []
@@ -107,19 +89,10 @@ def pairs_from_ranges(ranges):
     return pairs
 
 def get_overlapping_pairs(start, end):
-    pairs = []
-    for x in range(start, end):
-        pairs.append((x, x+1))
-
-    return pairs
+    return [(x, x+1) for x in range(start, end)]
 
 def lines_to_coords(lines, coordinates):
-    line_coords = []
-    for line in lines:
-        line_coord = line_indices_to_coords(line, coordinates)
-        line_coords.append(line_coord)
-    
-    return line_coords
+    return [line_indices_to_coords(line, coordinates) for line in lines]
 
 def line_indices_to_coords(line_indices, coordinates):
     point1_index = line_indices[0]

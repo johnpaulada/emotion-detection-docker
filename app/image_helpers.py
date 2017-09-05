@@ -23,17 +23,21 @@ def get_face_shape(image, rect):
     return shape
 
 def image_to_shape(image_rep):
-    shapes = []
     image = image_rep[0]
     rects = image_rep[1]
-    for rect in image_rep[1]:
-        shapes.append(get_face_shape(image, rect))
+    shapes = [get_face_shape(image, rect) for rect in rects]
     return (image, shapes)
 
 def preprocess(image_rep):
     image = image_rep[0]
     shape = image_rep[1][0]
+    min_x, min_y, max_x, max_y = max_from_shape(shape)
+    cropped = image[(min_y-10):(max_y+10), (min_x-10):(max_x+10)]
+    resized = imutils.resize(cropped, height=200)
 
+    return resized
+
+def max_from_shape(shape):
     min_x = 9999
     min_y = 9999
     max_x = 0
@@ -49,7 +53,4 @@ def preprocess(image_rep):
         elif y < min_y:
             min_y = y
 
-    cropped = image[(min_y-10):(max_y+10), (min_x-10):(max_x+10)]
-    resized = imutils.resize(cropped, height=200)
-
-    return resized
+    return min_x, min_y, max_x, max_y

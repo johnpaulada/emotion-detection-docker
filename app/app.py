@@ -5,11 +5,10 @@ from ml_helpers import experiment, train_model, save_model, load_model, predict_
 import numpy as np
 
 # OPTIMIZATIONS TO BE DONE (hopefully)
-# - List comprehensions
-# - Iteration to recursion
+# - Parallelize
 # - Memoize or lru_cache
-# - Try numpy on everything
 # - Fix constants
+# - Iteration to recursion
 
 IMAGE_DIR = './images'
 EMOTIONS = ['angry', 'happy', 'neutral', 'sad']
