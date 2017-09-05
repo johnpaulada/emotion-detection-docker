@@ -1,4 +1,7 @@
 from sklearn.ensemble import ExtraTreesClassifier, AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression, Perceptron, SGDClassifier
+from sklearn.neighbors import KNeighborsClassifier, NearestCentroid
+from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
 from sklearn.model_selection import cross_val_score
 
@@ -44,6 +47,18 @@ def get_classifiers():
     xgboost_100_point5 = GradientBoostingClassifier(n_estimators=100, learning_rate=0.5, max_depth=None, random_state=0)
     xgboost_100_point1 = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=None, random_state=0)
     xgboost_100_point01 = GradientBoostingClassifier(n_estimators=100, learning_rate=0.01, max_depth=None, random_state=0)
+    centroid = NearestCentroid()
+    neighbors_10 = KNeighborsClassifier(n_neighbors=10, n_jobs=-1)
+    neighbors_20 = KNeighborsClassifier(n_neighbors=20, n_jobs=-1)
+    logistic = LogisticRegression(solver='lbfgs', n_jobs=-1)
+    perceptron = Perceptron(n_jobs=-1)
+    perceptron_l2 = Perceptron(penalty='l2', n_jobs=-1)
+    perceptron_elastic = Perceptron(penalty='elasticnet', n_jobs=-1)
+    logistic_sgd = SGDClassifier(loss='log', penalty='elasticnet')
+    perceptron_sgd = SGDClassifier(loss='perceptron', penalty='elasticnet')
+    neural_net_hidden_10_10 = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(10, 10))
+    neural_net_hidden_100 = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(100,))
+    neural_net_hidden_50_50 = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(50,50))
 
     classifiers = [ \
         (ada_boost_100, "AdaBoost 100"), \
@@ -56,7 +71,19 @@ def get_classifiers():
         (xgboost_100, "XGBoost 100"), \
         (xgboost_100_point5, "XGBoost 100 0.5"), \
         (xgboost_100_point1, "XGBoost 100 0.1"), \
-        (xgboost_100_point01, "XGBoost 100 0.01") \
+        (xgboost_100_point01, "XGBoost 100 0.01"), \
+        (centroid, "Nearest Centroid"), \
+        (neighbors_10, "Nearest Neighbors 10"), \
+        (neighbors_20, "Nearest Neighbors 20"), \
+        (logistic, "Logistic Regression"), \
+        (perceptron, "Perceptron"), \
+        (perceptron_l2, "Perceptron L2"), \
+        (perceptron_elastic, "Perceptron ElasticNet"), \
+        (logistic_sgd, "Logistic w/ Gradient Descent"), \
+        (perceptron_sgd, "Perceptron w/ Gradient Descent"), \
+        (neural_net_hidden_10_10, "Neural Network 10 10"), \
+        (neural_net_hidden_100, "Neural Network 100"), \
+        (neural_net_hidden_50_50, "Neural Network 50 50") \
     ]
 
     return classifiers
