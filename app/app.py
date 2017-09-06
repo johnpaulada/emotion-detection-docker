@@ -1,17 +1,18 @@
 from FP import Maybe, List
 from os_helpers import get_directories, get_files_from_root
-from feature_helpers import extract_image_features, process_image, split_data
+from feature_helpers import extract_image_features, process_image, split_data, normalize_data, feature_reduction
 from ml_helpers import experiment, train_model, save_model, load_model, predict_with_model
 import numpy as np
 import argparse
 
 # OPTIMIZATIONS TO BE DONE (hopefully)
-# - Use splat
-# - Fix constants
-# - Iteration to recursion
+# - Do more FP
+# - Try sklearn pipeline
 # - Error trapping when invalid image
 
 IMAGE_DIR = './images'
+OLD_MODEL_PATH = './old_emotion_detector.pkl'
+NEW_MODEL_PATH = './emotion_detector.pkl'
 EMOTIONS = ['angry', 'happy', 'neutral', 'sad']
 
 def train(image_dir=IMAGE_DIR):
@@ -22,6 +23,8 @@ def train(image_dir=IMAGE_DIR):
         .reduce(lambda v, acc: acc + v) \
         .map(extract_image_features) \
         .reduce(split_data, ([], [])) \
+        .map(normalize_data) \
+        .map(feature_reduction(OLD_MODEL_PATH, True)) \
         .map(lambda v: (np.array(v[0]), np.array(v[1]))) \
         .map(experiment) \
         .map(train_model) \
@@ -35,6 +38,8 @@ def predict(image_paths):
     return List(image_paths) \
         .map(process_image) \
         .reduce(lambda v, acc: acc + (v,), ()) \
+        .map(normalize_data) \
+        .map(feature_reduction(OLD_MODEL_PATH)) \
         .map(predict_with_model(load_model())) \
         .map(lambda v: [EMOTIONS[x] for x in v]) \
         .value

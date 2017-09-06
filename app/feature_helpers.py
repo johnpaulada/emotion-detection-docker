@@ -1,7 +1,10 @@
 import cv2
+from FP import List, Maybe
 from math import atan2, degrees, sqrt
 from image_helpers import resize_to, get_face_rects, get_face_shape, image_to_shape, preprocess
-from FP import List, Maybe
+from ml_helpers import load_model
+from sklearn import preprocessing
+from sklearn.feature_selection import SelectFromModel
 
 def extract_image_features(image_rep, i=0):
     image_path = image_rep[0]
@@ -11,21 +14,19 @@ def extract_image_features(image_rep, i=0):
 
 def process_image(image_path, i=0):
     return Maybe.of(cv2.imread(image_path)) \
-                .map(resize_to(500)) \
-                .map(get_face_rects) \
-                .map(image_to_shape) \
-                .map(preprocess) \
-                .map(get_face_rects) \
-                .map(image_to_shape) \
-                .map(lambda x: x[1][0]) \
-                .map(get_features) \
-                .value
+        .map(resize_to(500)) \
+        .map(get_face_rects) \
+        .map(image_to_shape) \
+        .map(preprocess) \
+        .map(get_face_rects) \
+        .map(image_to_shape) \
+        .map(lambda x: x[1][0]) \
+        .map(get_features) \
+        .value
 
 def split_data(value, acc):
-    x = value[0]
-    y = value[1]
-    x_acc = acc[0]
-    y_acc = acc[1]
+    x, y = value
+    x_acc, y_acc = acc
     x_acc.append(x)
     y_acc.append(y)
 
@@ -43,15 +44,12 @@ def get_features(face_shape):
     face_lines = get_relevant_face_lines(coordinates)
     face_line_lengths = get_face_line_lengths(face_lines)
     face_line_angles = get_face_line_angles(face_lines)
-    features = features + face_line_lengths
-    features = features + face_line_angles
+    features = features + face_line_lengths + face_line_angles
 
     return features
 
 def get_coordinates_from_shape(shape):
-    coordinates = [(x, y) for x, y in shape]
-
-    return coordinates
+    return [(x, y) for x, y in shape]
 
 def get_relevant_face_lines(coordinates):
     face_lines = []
@@ -127,3 +125,15 @@ def get_points_delta(point1, point2):
     delta_y = point2[Y_INDEX] - point1[Y_INDEX]
 
     return delta_x, delta_y
+
+def normalize_data(data):
+    return (preprocessing.normalize(data[0]), data[1])
+
+def feature_reduction(model_path, xy=False):
+    def reduce(data, i=0):
+        model = load_model(model_path)
+        model = SelectFromModel(model, prefit=True)
+        new_x = model.transform(data[0] if xy else data)
+        return (new_x, data[1]) if xy else new_x
+    
+    return reduce
