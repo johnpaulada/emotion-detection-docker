@@ -32,7 +32,7 @@ The command supports the prediction of multiple images.
 
 For example:
 ```bash
-python3 app.py --predict path-to-input-image1 path-to-input-image2
+python3 app.py --predict ./happy-person.jpg ./angry_face.jpg
 ```
 
 ## Stack
