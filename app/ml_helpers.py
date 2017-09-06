@@ -107,18 +107,18 @@ def evaluate_models(classifiers, x, y):
 
 def evaluate_model(model, name, x, y):
     print("=========")
-    print("Processing {name}...".format(name=name))
+    print('Processing {name}...'.format(name=name))
     if hasattr(model, 'best_score_') and hasattr(model, 'best_params_'):
         model.fit(x, y)
         print("Params: ")
         print(model.best_params_)
-        print("{name} best score is {score}.".format(name=name, score=model.best_score_))
+        print('{name} best score is {score}.'.format(name=name, score=model.best_score_))
         return model.best_score_
     else:
         scores = cross_val_score(model, x, y)    
         mean_accuracy = scores.mean()
         print("Result:")
-        print("{name} mean accuracy is {accuracy}.".format(name=name, accuracy=mean_accuracy))
+        print('{name} mean accuracy is {accuracy}.'.format(name=name, accuracy=mean_accuracy))
         return mean_accuracy
 
 def predict_with_model(model):

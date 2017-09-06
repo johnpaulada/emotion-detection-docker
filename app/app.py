@@ -7,7 +7,7 @@ import argparse
 
 # OPTIMIZATIONS TO BE DONE (hopefully)
 # - Do more FP
-# - Try sklearn pipeline
+# - Use keyword arguments
 # - Error trapping when invalid image
 
 IMAGE_DIR = './images'
