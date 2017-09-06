@@ -74,8 +74,8 @@ def get_classifiers():
     xgboost = GradientBoostingClassifier(n_estimators=100, max_features='sqrt', presort='auto', learning_rate=0.5, max_depth=None)
 
     centroid = NearestCentroid()
+    neighbors_5 = KNeighborsClassifier(n_neighbors=5, n_jobs=-1)
     neighbors_10 = KNeighborsClassifier(n_neighbors=10, n_jobs=-1)
-    neighbors_20 = KNeighborsClassifier(n_neighbors=20, n_jobs=-1)
     logistic = LogisticRegression(solver='lbfgs', n_jobs=-1)
     perceptron_elastic = Perceptron(penalty='elasticnet', max_iter=1000, tol=1e-3, n_jobs=-1)
 
@@ -93,8 +93,8 @@ def get_classifiers():
         (ert, "ERT"), \
         (xgboost, "XGBoost"), \
         (centroid, "Nearest Centroid"), \
+        (neighbors_5, "Nearest Neighbors 5"), \
         (neighbors_10, "Nearest Neighbors 10"), \
-        (neighbors_20, "Nearest Neighbors 20"), \
         (logistic, "Logistic Regression"), \
         (perceptron_elastic, "Perceptron ElasticNet"), \
         (neural_net, "Neural Network") \
