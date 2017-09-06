@@ -129,6 +129,9 @@ def get_points_delta(point1, point2):
 def normalize_data(data):
     return (preprocessing.normalize(data[0]), data[1])
 
+def normalize_data_prediction(data):
+    return preprocessing.normalize(data)
+
 def feature_reduction(model_path, xy=False):
     def reduce(data, i=0):
         model = load_model(model_path)

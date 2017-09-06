@@ -1,6 +1,6 @@
 from FP import Maybe, List
 from os_helpers import get_directories, get_files_from_root
-from feature_helpers import extract_image_features, process_image, split_data, normalize_data, feature_reduction
+from feature_helpers import extract_image_features, process_image, split_data, normalize_data, normalize_data_prediction, feature_reduction
 from ml_helpers import experiment, train_model, save_model, load_model, predict_with_model
 import numpy as np
 import argparse
@@ -38,7 +38,7 @@ def predict(image_paths):
     return List(image_paths) \
         .map(process_image) \
         .reduce(lambda v, acc: acc + (v,), ()) \
-        .map(normalize_data) \
+        .map(normalize_data_prediction) \
         .map(feature_reduction(OLD_MODEL_PATH)) \
         .map(predict_with_model(load_model())) \
         .map(lambda v: [EMOTIONS[x] for x in v]) \
