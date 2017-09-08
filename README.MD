@@ -18,13 +18,16 @@
 ## Usage
 For help, you can run `python3 app.py -h`.
 
-### Training
-To train the program, run `python3 app.py --train path-to-images-folder`.
+### Extracting Data
+To extract data, run `python3 app.py --data path-to-images-folder`.
 
 For example:
 ```bash
-python3 app.py --train ./images
+python3 app.py --data ./images
 ```
+
+### Training
+To train the program, run `python3 app.py --train`.
 
 ### Prediction
 To predict the emotions of input images, run `python3 app.py --predict path-to-input-image`.
