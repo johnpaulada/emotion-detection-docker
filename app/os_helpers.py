@@ -1,6 +1,8 @@
 from FP import List
 import os
 
+image_directories = ['0. angry', '1. happy', '2. neutral', '3. sad']
+
 def get_directories(path):
     return [directory for directory in os.listdir(path) if os.path.isdir(os.path.join(path, directory))]
 

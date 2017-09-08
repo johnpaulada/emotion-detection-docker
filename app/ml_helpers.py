@@ -7,6 +7,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.externals import joblib
 
 DEFAULT_PKL_LOCATION = 'emotion_detector.pkl'
+DEFAULT_DATA_LOCATION = 'data.pkl'
 
 def train_ert(x, y):
     ert_classifier = ExtraTreesClassifier(n_estimators=200, max_depth=None, min_samples_split=2, n_jobs=-1)
@@ -25,6 +26,15 @@ def save_model(model, location=DEFAULT_PKL_LOCATION):
     joblib.dump(model, location)
 
     return model
+
+def save_data(data, location=DEFAULT_DATA_LOCATION):
+    print("Saving data...")
+    joblib.dump(data, location)
+
+    return data
+
+def load_data(location=DEFAULT_DATA_LOCATION):
+    return joblib.load(location)
 
 def load_model(location=DEFAULT_PKL_LOCATION):
     return joblib.load(location)
@@ -108,6 +118,9 @@ def evaluate_models(classifiers, x, y):
 def evaluate_model(model, name, x, y):
     print("=========")
     print('Processing {name}...'.format(name=name))
+    if hasattr(model, 'feature_importances_'):
+        print("Importances:")
+        print(model.feature_importances_)
     if hasattr(model, 'best_score_') and hasattr(model, 'best_params_'):
         model.fit(x, y)
         print("Params: ")
