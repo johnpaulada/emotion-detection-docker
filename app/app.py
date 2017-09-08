@@ -1,4 +1,4 @@
-from FP import Maybe, List
+from FP import Maybe, List, Nothing
 from os_helpers import get_directories, get_files_from_root
 from feature_helpers import extract_image_features, process_image, split_data, normalize_data, normalize_data_prediction, feature_reduction
 from ml_helpers import save_data, load_data, experiment, train_model, save_model, load_model, predict_with_model
@@ -6,9 +6,9 @@ import numpy as np
 import argparse
 
 # OPTIMIZATIONS TO BE DONE (hopefully)
+# - Eliminate lambdas
 # - Do more FP
 # - Use keyword arguments
-# - Error trapping when invalid image
 
 IMAGE_DIR = './images'
 OLD_MODEL_PATH = './old_emotion_detector.pkl'
@@ -17,7 +17,7 @@ DATA_PATH = './data.pkl'
 EMOTIONS = get_directories(IMAGE_DIR)
 
 def generate_data(image_dir=IMAGE_DIR):
-    return List(get_directories(image_dir)) \
+    return List.of(get_directories(image_dir)) \
         .chain(get_files_from_root(image_dir)) \
         .reduce(lambda v, acc: acc + v) \
         .map(extract_image_features) \
@@ -38,16 +38,30 @@ def train(data_dir=DATA_PATH):
 
     print("Training complete.")
 
+def get_emotions(emotion_indices):
+    return [EMOTIONS[index] for index in emotion_indices]
+
+def list_to_tuple(v, acc):
+    return acc + (v,)
+
+def nothingIfEmpty(value):
+    return Nothing() if not value else List(value)
+
+def isNotNone(value):
+    return value is not None
+
 def predict(image_paths):
     print("Predicting...")
 
     return List(image_paths) \
         .map(process_image) \
-        .reduce(lambda v, acc: acc + (v,), ()) \
+        .filter(isNotNone) \
+        .fold(nothingIfEmpty) \
+        .reduce(list_to_tuple, ()) \
         .map(normalize_data_prediction) \
         .map(feature_reduction(OLD_MODEL_PATH)) \
         .map(predict_with_model(load_model())) \
-        .map(lambda v: [EMOTIONS[x] for x in v]) \
+        .map(get_emotions) \
         .value
 
 parser = argparse.ArgumentParser(description='Emotion Detection Application')
@@ -60,13 +74,13 @@ data_arg = unpacked_args['data']
 train_arg = unpacked_args['train']
 predict_arg = unpacked_args['predict']
 
-if (data_arg is not None):
+if data_arg is not None:
     generate_data(data_arg[0])
 
-if (train_arg is not None):
+elif train_arg is True:
     train()
 
-if (predict_arg is not None):
+elif predict_arg is not None:
     print(predict(predict_arg))
 
 # Remove DS Store from images: rm ./app/images/*/.DS_Store

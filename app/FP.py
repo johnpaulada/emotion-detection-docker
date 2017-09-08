@@ -25,6 +25,9 @@ class Nothing(object):
     
     def chain(self, f):
         return Nothing()
+    
+    def reduce(self, f, d=None):
+        return Nothing()
 
     @property
     def value(self):
@@ -59,6 +62,9 @@ class List(object):
     def concat(self, x):
         return List(self.__value + [x])
 
+    def fold(self, f):
+        return f(self.__value)
+
     def reduce(self, f, d=[]):
         reduced_value = d
 
@@ -66,6 +72,9 @@ class List(object):
             reduced_value = f(value, reduced_value)
 
         return decide(reduced_value)
+
+    def filter(self, f):
+        return List([v for v in self.__value if f(v)])
 
     @property
     def value(self):

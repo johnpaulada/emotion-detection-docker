@@ -1,10 +1,13 @@
-from FP import List
+from FP import List, Just, Nothing
 import os
 
 image_directories = ['0. angry', '1. happy', '2. neutral', '3. sad']
 
 def get_directories(path):
-    return [directory for directory in os.listdir(path) if os.path.isdir(os.path.join(path, directory))]
+    try:
+        return [directory for directory in os.listdir(path) if os.path.isdir(os.path.join(path, directory))]
+    except OSError as e:
+        return None
 
 def files_from_dir(directory, root):
     full_root_path = os.path.join(root, directory)
