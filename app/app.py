@@ -64,23 +64,32 @@ def predict(image_paths):
         .map(get_emotions) \
         .value
 
-parser = argparse.ArgumentParser(description='Emotion Detection Application')
-parser.add_argument('--train', action='store_true', help='start training the program to predict emotions')
-parser.add_argument('--data', nargs=1, help='process images from specified folder into usable data', metavar='path_to_training_folder')
-parser.add_argument('--predict', nargs='+', help='predict the emotion of face in image', metavar='path_to_input_image')
-args = parser.parse_args()
-unpacked_args = vars(args)
-data_arg = unpacked_args['data']
-train_arg = unpacked_args['train']
-predict_arg = unpacked_args['predict']
+def parse_args():
+    parser = argparse.ArgumentParser(description='Emotion Detection Application')
+    parser.add_argument('--train', action='store_true', help='start training the program to predict emotions')
+    parser.add_argument('--data', nargs=1, help='process images from specified folder into usable data', metavar='path_to_training_folder')
+    parser.add_argument('--predict', nargs='+', help='predict the emotion of face in image', metavar='path_to_input_image')
+    args = parser.parse_args()
+    unpacked_args = vars(args)
+    data_arg = unpacked_args['data']
+    train_arg = unpacked_args['train']
+    predict_arg = unpacked_args['predict']
 
-if data_arg is not None:
-    generate_data(data_arg[0])
+    return data_arg, train_arg, predict_arg
 
-elif train_arg is True:
-    train()
+def accept_commands():
+    data_arg, train_arg, predict_arg = parse_args()
 
-elif predict_arg is not None:
-    print(predict(predict_arg))
+    if data_arg is not None:
+        generate_data(data_arg[0])
+
+    elif train_arg is True:
+        train()
+
+    elif predict_arg is not None:
+        print(predict(predict_arg))
+
+if __name__ == "__main__":
+    accept_commands()
 
 # Remove DS Store from images: rm ./app/images/*/.DS_Store
