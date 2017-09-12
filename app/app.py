@@ -2,6 +2,7 @@ from FP import Maybe, List, Nothing
 from os_helpers import get_directories, get_files_from_root
 from feature_helpers import extract_image_features, process_image, split_data, normalize_data, normalize_data_prediction, feature_reduction
 from ml_helpers import save_data, load_data, experiment, train_model, save_model, load_model, predict_with_model
+from lambdas import list_to_tuple, nothing_if_empty, is_not_none, split_to_tuple, add_reducer
 import numpy as np
 import argparse
 
@@ -15,9 +16,6 @@ OLD_MODEL_PATH = './old_emotion_detector.pkl'
 NEW_MODEL_PATH = './emotion_detector.pkl'
 DATA_PATH = './data.pkl'
 EMOTIONS = get_directories(IMAGE_DIR)
-
-if __name__ == "__main__":
-    accept_commands()
 
 def accept_commands():
     data_arg, train_arg, predict_arg = parse_args()
@@ -47,12 +45,12 @@ def parse_args():
 def generate_data(image_dir=IMAGE_DIR):
     return List.of(get_directories(image_dir)) \
         .chain(get_files_from_root(image_dir)) \
-        .reduce(lambda v, acc: acc + v) \
+        .reduce(add_reducer) \
         .map(extract_image_features) \
         .reduce(split_data, ([], [])) \
         .map(normalize_data) \
         .map(feature_reduction(OLD_MODEL_PATH, True)) \
-        .map(lambda v: (np.array(v[0]), np.array(v[1]))) \
+        .map(split_to_tuple) \
         .map(save_data) \
         .value
 
@@ -71,8 +69,8 @@ def predict(image_paths):
 
     return List(image_paths) \
         .map(process_image) \
-        .filter(isNotNone) \
-        .fold(nothingIfEmpty) \
+        .filter(is_not_none) \
+        .fold(nothing_if_empty) \
         .reduce(list_to_tuple, ()) \
         .map(normalize_data_prediction) \
         .map(feature_reduction(OLD_MODEL_PATH)) \
@@ -85,11 +83,5 @@ def predict(image_paths):
 def get_emotions(emotion_indices):
     return [EMOTIONS[index] for index in emotion_indices]
 
-def list_to_tuple(v, acc):
-    return acc + (v,)
-
-def nothingIfEmpty(value):
-    return Nothing() if not value else List(value)
-
-def isNotNone(value):
-    return value is not None
+if __name__ == "__main__":
+    accept_commands()
