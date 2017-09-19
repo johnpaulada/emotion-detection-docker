@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+
 from FP import Maybe, List, Nothing
 from os_helpers import get_directories, get_files_from_root
 from feature_helpers import extract_image_features, process_image, split_data, normalize_data, normalize_data_prediction, feature_reduction
 from ml_helpers import save_data, load_data, experiment, train_model, save_model, load_model, predict_with_model
 from lambdas import list_to_tuple, nothing_if_empty, is_not_none, split_to_tuple, add_reducer
+from decorating import animated
 import numpy as np
 import argparse
 
@@ -54,6 +57,7 @@ def generate_data(image_dir=IMAGE_DIR):
         .map(save_data) \
         .value
 
+@animated
 def train(data_dir=DATA_PATH):
     print("Training start...")
 

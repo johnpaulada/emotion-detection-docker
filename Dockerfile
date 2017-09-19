@@ -14,5 +14,7 @@ RUN pip3 install scikit-image
 RUN pip3 install opencv-python
 RUN pip3 install --upgrade imutils
 RUN pip3 install -U scikit-learn
+RUN pip3 install decorating
+RUN export PYTHONIOENCODING=UTF-8
 WORKDIR /home
 ENTRYPOINT /bin/bash
